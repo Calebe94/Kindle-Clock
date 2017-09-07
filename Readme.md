@@ -1,6 +1,16 @@
 # WebLaunch #
 
-WebLaunch is an extension for the Kindle Touch and Kindle PaperWhite with JailBreak and the application launcher KUAL. It is designed to open a URL without the browser frame (the black status bar can be removed too) to make it look like a native application.
+WebLaunch is an extension for the Kindle Touch and Kindle PaperWhite with JailBreak and the application launcher KUAL. It is designed to open a URL without the browser frame to make it look like a native application.
+It was designed by PaulFreund in 2013.
+
+This is a version that works on newer generations. Some of the features have been stripped away as I didn't got the time to fix it all. 
+You can send pull requests, I'll review it and then accept. I dont have much time for this project anymore.
+
+Battery usage is pretty high. It is a work in progress.
+
+## Important ##
+
+As of this moment there's no way of getting out of the application without restarting the kindle or using USBNetwork to get out of it. Be advised.
 
 ## Install ##
 

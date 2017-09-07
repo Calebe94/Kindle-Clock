@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ###############################################################################
-## Configuration variables 
+## Configuration variables
 
-APP_FOLDER="/mnt/us/extensions/WebLaunch"
+APP_FOLDER="file:///mnt/us/extensions/WebLaunch"
 
 APPREG="/var/local/appreg.db"
 
@@ -75,10 +75,22 @@ then
 	sqlite3 $APPREG "INSERT INTO properties (handlerId, name, value) VALUES ($APP_ID_STRING,'unloadPolicy','unloadOnPause')"
 fi
 
+REG_FRAMEWORK =$(sqlite3 $APPREG "select handlerId from properties where handlerId=$APP_ID_STRING and name='framework'")
+
+if [[ -z "$REG_FRAMEWORK" ]]
+then
+	echo "Application framework not registered, registering..."
+	sqlite3 $APPREG "INSERT INTO properties (handlerId, name, value) VALUES ($APP_ID_STRING,'framework','')"
+fi
+
+REG_ASSOCIATIONS =$(sqlite3 $APPREG "select handlerId from associations where handlerId=$APP_ID_STRING")
+
+if [[ -z "$REG_ASSOCIATIONS" ]]
+then
+	echo "Application association not registered, registering..."
+	sqlite3 $APPREG "INSERT INTO associations (handlerId, interface, contentId, defaultAssoc) VALUES ($APP_ID_STRING,'application','none','false')"
+fi
 ###############################################################################
 ## Start the application
 
 lipc-set-prop com.lab126.appmgrd start app://$APP_ID
-
-
-

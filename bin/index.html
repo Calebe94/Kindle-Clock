@@ -4,179 +4,116 @@
 		<meta charset="UTF-8">
 		<title>WebLaunch</title>
 
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/Kindle.js"></script>	
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/logging.js"></script> 
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/eventing.js"></script> 
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/object.js"></script>
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/storage.js"></script>
-		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/applicationManager.js"></script> 
-		
-		<script type="text/javascript" src="pillowHelper.js"></script>
+		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/Kindle.js"></script>
+
+        <!-- Shared library modules -->
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/strings.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/enums.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/eventing.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/dom.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/object.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/viewers.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/ui.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/dialogViewer.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/httpErrorManager.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/contentWindowHttpErrorHandler.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/xor.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/xorRulesContentWindow.js"></script>
+
+        <!-- Device API modules -->
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/logging.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/applicationLauncher.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/applicationManager.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/contentWindow.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/connection.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/userAgent.js"></script>
+        <script type="text/javascript" src="/var/local/mesquite/shared/javascripts/device.js"></script>
+
 		<script type="text/javascript">
 			var settings = undefined;
 		</script>
-		<script type="text/javascript" src="../settings.js"></script>
+
 		<script type="text/javascript">
 			//-----------------------------------------------------------------
-			// Register our handling functions 
-			Kindle.use(function(b) 
+			// Register our handling functions
+			Kindle.use(function(WebLaunch)
 			{
 				//=============================================================
 				// App name and settings
 				//=============================================================
-			
+
 				//-------------------------------------------------------------
 				// Define the app name for later use
 				var appName = 'com.PaulFreund.WebLaunch';
+
 				var preventScreenSaverStateBackup  = null;
 
-				//-------------------------------------------------------------
-				// Default settings if none supplied			
-				var sessionSettings = { 
-					url: 'error.html',
-					title: 'WebLaunch',
-					hideStatusbar: false,
-					enableWireless: false,
-					powerButtonClose: true,
-					enablePreventScreenSaver: false
-				};			
-				
-				//-------------------------------------------------------------
-				// Copy supplied config properties		
-				if( settings !== undefined && typeof(settings) === 'object' )
-				{
-					for( var key in sessionSettings )
-					{
-						if( !sessionSettings.hasOwnProperty(key) ) { continue; }
-						if( !settings.hasOwnProperty(key) ) { continue; }
-						sessionSettings[key] = settings[key];
-					}
-				}	
+                var contentWindow;
 
-				//=============================================================
-				// Helper functions
-				//=============================================================
+                var logger = WebLaunch.logging.createEventLogger('WebLaunch');
+				
+				var address = "http://www.google.com.br";
+				var orientation = "Portrait";
 
-				//-------------------------------------------------------------
-				// Small helper function to call runAsDefaultStatusBar 
-				function pillowRun(fkt, callback) 
-				{ 
-					pillowHelper.Run('default_status_bar', appName, fkt, callback); 
-				}
-				
-				//-------------------------------------------------------------
-				// Get the initial state of preventScreenSaver and change it 		
-				function requestPreventScreenSaverState()
-				{
-					// Get state
-					pillowRun(
-						"return nativeBridge.getIntLipcProperty('com.lab126.powerd', 'preventScreenSaver');", 
-						function(state)
-						{
-							if( typeof(state) === 'number' && (state === 0 || state === 1 ) )
-							{
-								preventScreenSaverStateBackup = state;
-								setPreventScreenSaverState(1);
-							}
-						}
-					);
-				}
-				
-				//-------------------------------------------------------------
-				// Get the initial state of preventScreenSaver and change it 		
-				function setPreventScreenSaverState(state)
-				{				
-					if( typeof(state) === 'number' && (state === 0 || state === 1 ) )
-					{
-						pillowRun(	
-							"nativeBridge.setIntLipcProperty('com.lab126.powerd','preventScreenSaver',"
-							+state
-							+");"
-						); 
-					}
-				}
-				
-				//-------------------------------------------------------------
-				// Close the application
-				function exitApplication()
-				{
-					// Close the application
-					if( sessionSettings.powerButtonClose )
-						pillowRun("nativeBridge.setLipcProperty('com.lab126.appmgrd', 'stop', '"+appName+"');");
-				}				
-				
-				//-------------------------------------------------------------
-				// Register power button callback
-				function registerPowerButtonCallback()
-				{			
-					// Register Callback and watch for power button
-					pillowHelper.RegisterStatusBarEventCallback(appName, 
-						function(value) 
-						{
-							if( value.eventName && value.eventName === 'yoshibutton')
-								exitApplication();
-						}
-					);
-					
-					// Request powerbutton event
-					pillowHelper.RequestStatusBarEvent(
-						appName, 
-						'com.lab126.system.event', 
-						'yoshibutton'
-					);
-				}			
-						
 				//=============================================================
 				// Event handlers
 				//=============================================================
 
 				//-------------------------------------------------------------
-				// Open application
-				function openApp(state)
-				{
-					registerPowerButtonCallback();
-					
-					if( sessionSettings.enablePreventScreenSaver )
-						requestPreventScreenSaverState();
-					
-					// Enable networking if desired
-					if( sessionSettings.enableWireless )
-						kindle.net.setWirelessState('on');
-					
-					// Load url 
-					kindle.chrome.createContentWindow(sessionSettings.url);
-					
-					// Set window title
-					kindle.chrome.setTitleBar('', sessionSettings.title);
-					
-					// Remove statusBar if desired
-					if( sessionSettings.hideStatusbar )
-						pillowRun("nativeBridge.hideMe();");				
-				}
-
-				//-------------------------------------------------------------
-				// restore status bar on close
-				function closeApp() 
-				{ 
-					if( preventScreenSaverStateBackup !== null )
-						setPreventScreenSaverState(preventScreenSaverStateBackup);
+                // Load application
+                var onLoad = function () {
 				
-					pillowHelper.UnRegisterStatusBarEventCallback(appName);
-					pillowRun("nativeBridge.showMe();"); 
+				
+                    contentWindow = WebLaunch.contentWindow.get();
+					
+					// Sets the viewport zoom
+                    contentWindow.viewport.zoomFactor.set(1.0);
+                    contentWindow.viewport.position.set(0, 0);
+					
+					// Auto zoom?
+                    //contentWindow.viewport.autoZoom.enable();
+					
+					// Disable Horizontal Scrolling
+                    contentWindow.viewport.horizontalScrolling.disable();
+                    contentWindow.viewport.horizontalScrollBar.set(WebLaunch.enums.scrollBarStates.hidden);
+					
+					// Disable Vertical Scrolling
+                    contentWindow.viewport.verticalScrolling.disable();
+                    contentWindow.viewport.verticalScrollBar.set(WebLaunch.enums.scrollBarStates.hidden);
+                    contentWindow.viewport.pinchZoom.enable();
+
+					// Sets Orientation
+                    WebLaunch.device.orientation = orientation;
+
+					// Removes titleBar
+                    WebLaunch.ui.titleBar.set('','');
+
+
+                    WebLaunch.httpErrorManager.initialize();
+					
+                    // initialize dialogViewer - shows connection error dialog
+                    WebLaunch.viewers.initialize();
+                }
+
+				// Open application
+				var onGo = function (state)
+				{
+					// Loads application
+                    contentWindow.window.location.href = address;
 				}
 
 				//=============================================================
 				// Registration of event handlers
 				//=============================================================
 
-				b.applicationManager.addEventListener('go', openApp);
-				b.applicationManager.addEventListener('unload', closeApp);
-				b.applicationManager.addEventListener('pause', closeApp);
+				WebLaunch.applicationManager.addEventListener('go', onLoad);
+                WebLaunch.applicationManager.addEventListener('go', onGo);
+
 			});
 
 		</script>
 	</head>
-	
+
 	<body>
 	</body>
 
