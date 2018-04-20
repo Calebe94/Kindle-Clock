@@ -75,7 +75,7 @@ then
 	sqlite3 $APPREG "INSERT INTO properties (handlerId, name, value) VALUES ($APP_ID_STRING,'unloadPolicy','unloadOnPause')"
 fi
 
-REG_FRAMEWORK =$(sqlite3 $APPREG "select handlerId from properties where handlerId=$APP_ID_STRING and name='framework'")
+REG_FRAMEWORK=$(sqlite3 $APPREG "select handlerId from properties where handlerId=$APP_ID_STRING and name='framework'")
 
 if [[ -z "$REG_FRAMEWORK" ]]
 then
@@ -83,7 +83,7 @@ then
 	sqlite3 $APPREG "INSERT INTO properties (handlerId, name, value) VALUES ($APP_ID_STRING,'framework','')"
 fi
 
-REG_ASSOCIATIONS =$(sqlite3 $APPREG "select handlerId from associations where handlerId=$APP_ID_STRING")
+REG_ASSOCIATIONS=$(sqlite3 $APPREG "select handlerId from associations where handlerId=$APP_ID_STRING")
 
 if [[ -z "$REG_ASSOCIATIONS" ]]
 then
