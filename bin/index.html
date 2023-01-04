@@ -2,7 +2,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>WebLaunch</title>
+		<title>Clock</title>
 
 		<script type="text/javascript" src="/var/local/mesquite/shared/javascripts/Kindle.js"></script>
 
@@ -36,7 +36,7 @@
 		<script type="text/javascript">
 			//-----------------------------------------------------------------
 			// Register our handling functions
-			Kindle.use(function(WebLaunch)
+			Kindle.use(function(Clock)
 			{
 				//=============================================================
 				// App name and settings
@@ -44,15 +44,15 @@
 
 				//-------------------------------------------------------------
 				// Define the app name for later use
-				var appName = 'com.PaulFreund.WebLaunch';
+				var appName = 'com.Calebe94.Clock';
 
 				var preventScreenSaverStateBackup  = null;
 
                 var contentWindow;
 
-                var logger = WebLaunch.logging.createEventLogger('WebLaunch');
-				
-				var address = "http://www.google.com.br";
+                var logger = Clock.logging.createEventLogger('Clock');
+
+				var address = "file:///mnt/us/extensions/Clock/bin/clock.html";
 				var orientation = "Portrait";
 
 				//=============================================================
@@ -62,37 +62,37 @@
 				//-------------------------------------------------------------
                 // Load application
                 var onLoad = function () {
-				
-				
-                    contentWindow = WebLaunch.contentWindow.get();
-					
+
+
+                    contentWindow = Clock.contentWindow.get();
+
 					// Sets the viewport zoom
                     contentWindow.viewport.zoomFactor.set(1.0);
                     contentWindow.viewport.position.set(0, 0);
-					
+
 					// Auto zoom?
                     //contentWindow.viewport.autoZoom.enable();
-					
+
 					// Disable Horizontal Scrolling
                     contentWindow.viewport.horizontalScrolling.disable();
-                    contentWindow.viewport.horizontalScrollBar.set(WebLaunch.enums.scrollBarStates.hidden);
-					
+                    contentWindow.viewport.horizontalScrollBar.set(Clock.enums.scrollBarStates.hidden);
+
 					// Disable Vertical Scrolling
                     contentWindow.viewport.verticalScrolling.disable();
-                    contentWindow.viewport.verticalScrollBar.set(WebLaunch.enums.scrollBarStates.hidden);
+                    contentWindow.viewport.verticalScrollBar.set(Clock.enums.scrollBarStates.hidden);
                     contentWindow.viewport.pinchZoom.enable();
 
 					// Sets Orientation
-                    WebLaunch.device.orientation = orientation;
+                    Clock.device.orientation = orientation;
 
 					// Removes titleBar
-                    WebLaunch.ui.titleBar.set('','');
+                    Clock.ui.titleBar.set('','');
 
 
-                    WebLaunch.httpErrorManager.initialize();
-					
+                    Clock.httpErrorManager.initialize();
+
                     // initialize dialogViewer - shows connection error dialog
-                    WebLaunch.viewers.initialize();
+                    Clock.viewers.initialize();
                 }
 
 				// Open application
@@ -106,8 +106,8 @@
 				// Registration of event handlers
 				//=============================================================
 
-				WebLaunch.applicationManager.addEventListener('go', onLoad);
-                WebLaunch.applicationManager.addEventListener('go', onGo);
+				Clock.applicationManager.addEventListener('go', onLoad);
+                Clock.applicationManager.addEventListener('go', onGo);
 
 			});
 

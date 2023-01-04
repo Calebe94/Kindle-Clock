@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<widget id="com.PaulFreund.WebLaunch" version="1.0" viewmodes="application" xmlns="http://www.w3.org/ns/widgets" xmlns:kindle="http://kindle.amazon.com/ns/widget-extensions">
+<widget id="com.Calebe94.Clock" version="1.0" viewmodes="application" xmlns="http://www.w3.org/ns/widgets" xmlns:kindle="http://kindle.amazon.com/ns/widget-extensions">
 
-    <name xml:lang="en">WebLaunch</name>
-    <description xml:lang="en">WebLaunch</description>
+    <name xml:lang="en">Clock</name>
+    <description xml:lang="en">Clock</description>
 
-    <name xml:lang="de">WebLaunch</name>
-    <description xml:lang="de">WebLaunch</description>
+    <name xml:lang="de">Clock</name>
+    <description xml:lang="de">Clock</description>
 
-    <name xml:lang="pt">WebLaunch</name>
-    <description xml:lang="pt">WebLaunch</description>
+    <name xml:lang="pt">Clock</name>
+    <description xml:lang="pt">Clock</description>
 
     <content src="index.html"/>
 
@@ -54,7 +54,7 @@
     </feature>
 
     <kindle:messaging>
-        <kindle:app name="com.PaulFreund.WebLaunch" value="yes" />
+        <kindle:app name="com.Calebe94.Clock" value="yes" />
         <kindle:app name="com.lab126.pillow" value="yes" />
         <kindle:app name="com.lab126.chromebar" value="yes" />
     </kindle:messaging>
