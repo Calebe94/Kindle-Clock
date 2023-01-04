@@ -90,7 +90,14 @@ then
 	echo "Application association not registered, registering..."
 	sqlite3 $APPREG "INSERT INTO associations (handlerId, interface, contentId, defaultAssoc) VALUES ($APP_ID_STRING,'application','none','false')"
 fi
+
+###############################################################################
+## Disable screen saver
+###############################################################################
+/usr/bin/ds.sh
+
 ###############################################################################
 ## Start the application
+###############################################################################
 
 lipc-set-prop com.lab126.appmgrd start app://$APP_ID
