@@ -3,11 +3,11 @@
 ###############################################################################
 ## Configuration variables
 
-APP_FOLDER="file:///mnt/us/extensions/WebLaunch"
+APP_FOLDER="file:///mnt/us/extensions/Clock"
 
 APPREG="/var/local/appreg.db"
 
-APP_ID="com.PaulFreund.WebLaunch"
+APP_ID="com.Calebe94.Clock"
 APP_ID_STRING="'$APP_ID'"
 
 ## WARNING - Changing the extension path after first run will result in errors,
